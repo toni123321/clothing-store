@@ -59,22 +59,16 @@ export const getCategoriesAndDocuments = async () => {
     const collectionRef = collection(db, 'categories')
     const q = query(collectionRef)
     const querySnapshot = await getDocs(q)
-    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-        const { title, items } = docSnapshot.data();
-        acc[title.toLowerCase()] = items;
-        return acc;
-    }, {});
-    return categoryMap;
+
+    return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
 }
 
 export const createUserDocumentfromAuth = async (userAuth, additionalInformation = {}) => {
     if(!userAuth) return;
 
     const userDocRef = doc(db, 'users', userAuth.uid);
-    console.log(userDocRef);
 
     const userSnapshot = await getDoc(userDocRef);
-    console.log(userSnapshot)
 
     // Check if snapshot exist in the db
     if(!userSnapshot.exists()) {
